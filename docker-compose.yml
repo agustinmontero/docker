@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3'
 
 volumes:
   jenkins-home:
@@ -15,6 +15,7 @@ services:
     ports:
     - "50000:50000"
     - "10080:8080"
+    restart: unless-stopped
     volumes:
     - jenkins-home:/var/jenkins_home
     networks:
