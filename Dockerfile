@@ -1,6 +1,6 @@
-FROM openjdk:8-jdk
+FROM arm32v7/openjdk:8-jdk
 
-RUN apt-get update && apt-get install -y git curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git curl xvfb && rm -rf /var/lib/apt/lists/*
 
 ARG user=jenkins
 ARG group=jenkins
@@ -75,6 +75,13 @@ USER ${user}
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
+
+USER root
+RUN ls -l /usr/local/bin/jenkins.sh
+RUN chmod +x /usr/local/bin/jenkins.sh
+RUN ls -l /usr/local/bin/jenkins.sh
+
+USER ${user}
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
 # from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
